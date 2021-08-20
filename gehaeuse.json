@@ -1,0 +1,19 @@
+{
+    "parameterSets": {
+        "test": {
+            "$fn": "100",
+            "boxHeight": "30",
+            "boxLength": "40",
+            "boxWidth": "60",
+            "engravedText": "Box",
+            "engraving": "Rechteck",
+            "epsilon": "0.05",
+            "print": "false",
+            "screwDiameter": "2.5",
+            "screwHead": "false",
+            "screwLength": "10",
+            "topTranslate": "10"
+        }
+    },
+    "fileFormatVersion": "1"
+}
