@@ -9,11 +9,19 @@ epsilon=0.1;
 //Druckansicht
 print = false;
 
+//Platine zeigen
+showPCB = false;
+
+//Lage des Schraublochs;
+screwHolePosition = 5; //[0:1:20]
+
 //Deckel schieben
 topTranslate = 0; // [0:1:20]
 
-//translate([2,2,4.5])
-    //platine();
+if (showPCB) {
+    translate([2,2,4.5])
+        platine();
+  } else {}
 color("grey")
     gehaeuse();
     
@@ -23,9 +31,9 @@ difference(){
     color("green")
         cube([75.0,28.0,1.6]);
             union(){
-                translate([2.0,2.0,-epsilon])
+                translate([3.5,3.5,-epsilon])
                     cylinder(1.6+2*epsilon,1.0,1.0);
-                translate([2.0,26.0,-epsilon])
+                translate([3.5,24.5,-epsilon])
                     cylinder(1.6+2*epsilon,1.0,1.0);
             }
     }
@@ -57,7 +65,7 @@ module gehaeuse() {
     seitenwaende();
     if (print) {
         rotate([180,0,0])
-            translate([0,-66.0,-24.0])
+            translate([0,-70.0,-24.0])
                 deckel();
                 topTranslate = 0;
     } else {
@@ -82,23 +90,26 @@ module boden() {
         translate([1.5,1.5,1.5])
             cube([76.0,29.0,0.5+2]);
         //Öffnung für Schraubenhalterung
-        translate([40.5,17.0,0-epsilon])
-          cylinder(1.5+2*epsilon,3.0,3.0);
-        translate([32.5,15.25,0-epsilon])
-          cube([6.0,3.5,1.5+2*epsilon]);
-        translate([32.5,17.0,0-epsilon])
-          cylinder(1.5+2*epsilon,1.75,1.75);
+          translate([0-screwHolePosition,0,0])
+            union() {
+              translate([40.5,17.0,0-epsilon])
+                cylinder(1.5+2*epsilon,3.0,3.0);
+              translate([32.5,15.25,0-epsilon])
+                cube([6.0,3.5,1.5+2*epsilon]);
+              translate([32.5,17.0,0-epsilon])
+                cylinder(1.5+2*epsilon,1.75,1.75);
+          }
         }
     }
     
 //Auflagezylinder
-    for(x=[4.0,75.0])
-        for(y=[4.0,28.0])
+    for(x=[5.5,73.5])
+        for(y=[5.5,26.5])
             translate([x,y,1.5])
                 cylinder(3.0,1.5,1.5);
-    for(y=[4.0,28.0])
-        translate([4.0,y,4.5])
-            cylinder(2,0.9,0.9);
+    for(y=[5.5,26.5])
+        translate([5.5,y,4.5])
+            cylinder(2,0.8,0.8);
         
 }
 module seitenwaende() {
@@ -154,6 +165,7 @@ module deckel() {
             cube([76.0,29.0,0.5]);
     }
 //Halteschnalle über Kabel
+antilidbend = 0.2;
     //äußere Lasche
     difference(){
         translate([0,13.2+epsilon,9.9])
@@ -166,29 +178,36 @@ module deckel() {
     }
     }
     //innere Lasche
-        difference(){
+    difference(){
         translate([1.5,13.2+epsilon,9.9])
-            cube([1.5,5.6-2*epsilon,12.1]);
+            cube([1.5+antilidbend,5.6-2*epsilon,12.1]);
         hull() {
             for(y=[15,17])
                 translate([1.5-epsilon,y,9.9])
                 rotate([0,90,0])
-                cylinder(1.5+2*epsilon,1.8,1.8);
+                cylinder(1.5+antilidbend+2*epsilon,1.8,1.8);
     }
     }
-    translate([1.5,10.5,11.7])
+    translate([1.5+antilidbend,10.5,11.7])
         cube([1.5,11.0,10.8]);
-    translate([1.5,10.5,8.1])
-        cube([1.5,2.7+epsilon,3.6]);
-    translate([1.5,18.8-epsilon,8.1])
-        cube([1.5,2.7+epsilon,3.6]);
+    translate([1.5+antilidbend,10.5,8.2])
+        cube([1.5,2.7+epsilon,3.5]);
+    translate([1.5+antilidbend,18.8-epsilon,8.2])
+        cube([1.5,2.7+epsilon,3.5]);
     //Feder
-    translate([1.1,10.6,14.1])
-        cube([0.4,10.8,0.4]);
+    translate([1.2,10.6,14.1])
+        cube([0.5,10.8,0.4]);
 //Halteschnalle über Stromanschluss
-    translate([76,13.6,19.1])
-        cube([1.5,4.8,3.9]);
+    translate([76,13.6,19.2])
+        cube([1.5,4.8,3.8]);
     //Feder
     translate([77.5,13.6,20.6])
         cube([0.4,4.8,0.4]);
+    
+//Anti-Verrutsch-Balken an Längsseiten
+    translate([34.5,1.5,21.0])
+        cube([10.0,1.5,1.5]);
+    translate([34.5,29.0,21.0])
+        cube([10.0,1.5,1.5]);
     }
+
